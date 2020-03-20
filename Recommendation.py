@@ -100,7 +100,7 @@ profiles_distance_rules = {
         'latestactivity': lambda a, b: datetime_difference(str(a), str(b)) / (60*60*24*365)
     }
 
-#   Just tests so far
+#   Just tests
 if __name__ == '__main__':
     # print(distance_rows('products', '7225', '29438', products_distance_rules))
     # print(distance_rows('profiles', '5a393d68ed295900010384ca', '5a393eceed295900010386a8', profiles_distance_rules))
