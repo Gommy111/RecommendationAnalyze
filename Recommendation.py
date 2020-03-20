@@ -52,11 +52,30 @@ def distance_rows(table, row_id1, row_id2, distance_rules) -> float:
     return distance
 
 
-def content_filtering(category, subcategory, susubcategory, targetaudience):
+def rule1(category, subcategory, susubcategory, targetaudience):
     cur.execute("""SELECT id FROM products WHERE 
     category = %s AND subcategory = %s AND subsubcategory = %s AND targetaudience = %s""",
                 (category, subcategory, susubcategory, targetaudience))
-    return tuple([i[0] for i in cur.fetchall()])
+    ouput = []
+    i = 0
+    for row in cur.fetchall():
+        ouput.append(row['id'])
+        i += 1
+        if i >= 10:
+            break
+    return ouput
+
+
+def rule2(segment):
+    cur.execute("SELECT id FROM profiles WHERE segment = %s", (segment,))
+    ouput = []
+    i = 0
+    for row in cur.fetchall():
+        ouput.append(row['id'])
+        i += 1
+        if i >= 10:
+            break
+    return ouput
 
 
 def datetime_difference(string1, string2):
@@ -81,12 +100,14 @@ profiles_distance_rules = {
         'latestactivity': lambda a, b: datetime_difference(str(a), str(b)) / (60*60*24*365)
     }
 
+#   Just tests so far
 if __name__ == '__main__':
-    #print(distance_rows('products', '7225', '29438', products_distance_rules))
-    #print(distance_rows('profiles', '5a393d68ed295900010384ca', '5a393eceed295900010386a8', profiles_distance_rules))
+    # print(distance_rows('products', '7225', '29438', products_distance_rules))
+    # print(distance_rows('profiles', '5a393d68ed295900010384ca', '5a393eceed295900010386a8', profiles_distance_rules))
     # print(datetime_difference("2019-01-13 14:08:33.995", "2018-04-19 10:13:28.391"))
-    preprocces()
-    # print(content_filtering('Gezond & verzorging', 'Lichaamsverzorging', 'Deodorant', 'Vrouwen'))
+    # preprocces()
+    print(rule1('Gezond & verzorging', 'Lichaamsverzorging', 'Deodorant', 'Vrouwen'))
+    print(rule2("BOUNCER"))
     c.commit()
     cur.close()
     c.close()
